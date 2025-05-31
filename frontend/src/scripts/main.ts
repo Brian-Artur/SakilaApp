@@ -104,7 +104,7 @@ const renderFilms = () => {   // Se declara una función anónima de flecha
   const buttons = `
     <div class="mb-3 d-flex align-items-center flex-wrap gap-2">
       <button id="btn-all-films" class="btn btn-danger text-white fw-bold">Todas las películas</button>
-      <button id="btn-available-films" class="btn btn-warning text-dark fw-bold">Clientes de Canada</button>
+      <button id="btn-available-films" class="btn btn-warning text-dark fw-bold">Nunca alquiladas</button>
       <div class="input-group" style="width: 350px;">
         <input type="text" id="search-input" class="form-control focus-ring focus-ring-warning" placeholder="Buscar por título o descripción...">
         <button class="btn btn-danger text-white fw-semibold" type="button" id="filter-button">

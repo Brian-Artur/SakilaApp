@@ -1,50 +1,44 @@
-import express from 'express';
-import { createPool } from 'mysql2/promise';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
+import path from 'path';
 import filmRoutes from './routes/filmRoutes';
-import path from 'path';// agregado para el favicon
+import { authRouter, dbConfig } from './routes/autentificacion';
 
 const app = express();
+const publicPath = path.join(__dirname, '../../frontend/public');
+const distPath = path.join(__dirname, '../../frontend/dist');
 
-//Esto permite servir favicon.ico, imágenes, etc.
-app.use(express.static(path.join(__dirname, '../public')));
-
-// Middleware
+// Middlewares globales
 app.use(cors());
 app.use(express.json());
 
-// Conexión base de datos (Sakila)
-export const db = createPool({
-  host: 'localhost',
-  user: 'root',
-  password: 'mariadb', // Cambiar según tu config
-  database: 'sakila',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-});
+// Rutas de autenticación (login, connect, config)
+app.use('/', authRouter);
 
-
-// Ruta de prueba
-app.get('/api/films', async (_req, res) => {
-  try {
-    const [rows] = await db.query('SELECT * FROM film');
-    res.json(rows);
-  } catch (error) {
-    res.status(500).json({ message: 'Error al consultar la base de datos', error });
+// Protección de root e index antes de servir los archivos estátitcos
+app.get(['/', '/index.html'], (_req, res, next) => {
+  if (!dbConfig) {
+    return res.redirect('/login.html');
   }
+  next();
 });
 
-// Usar rutas
-app.use('/api/films', filmRoutes);
+// Servimos archivos estáticos
+app.use(express.static(publicPath));
+app.use('/dist', express.static(distPath));
 
-// Middleware para archivos estáticos
-app.use(express.static(path.join(__dirname, '../../frontend/public')));  // CSS, imágenes, etc.
-app.use('/dist', express.static(path.join(__dirname, '../../frontend/dist')));  // JS compilado
-
-// Ruta para el frontend (index.html)
-app.get('/', (_req, res) => {
-  res.sendFile(path.join(__dirname, '../../frontend/public/index.html'));
-});
+// API protegida: FILMS
+app.use(
+  '/api/films',
+  // middleware de auth
+  (req: Request, res: Response, next: NextFunction): void => {
+    if (!dbConfig) {
+      res.status(403).json({ message: 'Autenticar conexión primero' });
+      return;   // ¡aquí salimos sin devolver el Response!
+    }
+    next();    // continuamos hacia filmRoutes
+  },
+  filmRoutes
+);
 
 export default app;

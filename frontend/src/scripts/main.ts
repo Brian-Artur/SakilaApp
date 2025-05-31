@@ -74,17 +74,17 @@ const renderFilms = () => {   // Se declara una función anónima de flecha
 
   if (filteredFilms.length === 0) {
     app.innerHTML = `
-      <div class="mb-3 d-flex align-items-center flex-wrap gap-2">
-        <button id="btn-all-films" class="btn btn-outline-danger">Todas las películas</button>
-        <button id="btn-available-films" class="btn btn-danger">Nunca alquiladas</button>
-        <div class="input-group" style="width: 350px;">
-          <input type="text" id="search-input" class="form-control" placeholder="Buscar por título o descripción...">
-          <button class="btn btn-danger" type="button" id="filter-button">
-            Filtrar
-          </button>
-          <button class="btn btn-outline-danger" type="button" id="clear-search">
-            Limpiar
-          </button>
+    <div class="mb-3 d-flex align-items-center flex-wrap gap-2">
+      <button id="btn-all-films" class="btn btn-danger text-white fw-bold">Todas las películas</button>
+      <button id="btn-available-films" class="btn btn-warning text-dark fw-bold">Nunca alquiladas</button>
+      <div class="input-group" style="width: 350px;">
+        <input type="text" id="search-input" class="form-control focus-ring focus-ring-warning" placeholder="Buscar por título o descripción...">
+        <button class="btn btn-danger text-white fw-semibold" type="button" id="filter-button">
+          Filtrar
+        </button>
+        <button class="btn btn-light text-warning fw-semibold" type="button" id="clear-search">
+          Limpiar
+        </button>
         </div>
       </div>
       <p class="text-warning">No se encontraron resultados.</p>

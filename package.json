@@ -1,0 +1,7 @@
+{
+  "name": "fullstack-app",
+  "version": "1.0.0",
+  "scripts": {
+    "netlify:build": "cd backend && npm install && npm run build && cd ../frontend && npm install && npm run build"
+  }
+}
